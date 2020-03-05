@@ -5,14 +5,16 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
-      backgroundColor: "blue",
+      zIndex: 100,
+      //flexGrow: 1,
+      //backgroundColor: "grey",
       position: "absolute",
-      height: "100%",
-      width: "100%"
+      //height: "100%",
+      //width: "100%",
+      //zIndex: 10,
       //borderStyle: 'solid',
       //borderWidth: '1px',
-      //backgroundColor: 'rgba(0,0,0,.10)'
+      backgroundColor: 'rgba(0,0,0,.10)'
     },
     paper: {
       padding: theme.spacing(2),
@@ -24,22 +26,13 @@ const useStyles = makeStyles((theme) =>
 
 
 export default function DropOverlay(props) {
-    console.log("initalized", props);
-    //const [show, setShow] = useState(false);
     const classes = useStyles();
-    /*
-    useEffect(() => {
-        console.log("props", props);
-
-        if(show != props.hide) {
-            console.log("state change");
-            setShow(props.hide);
-        }
-    });
-    */
+  
     
     return(
-        <div className={classes.root}>
+        <div style={{height: props.height - 200, 
+          width: props.width, backgroundColor: 'grey',
+          position: 'absolute', zIndex: 100, border: '4px dashed black'}}>
             {"Upload here!!!!"}
         </div>
     )

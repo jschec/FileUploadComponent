@@ -1,106 +1,149 @@
-import React, { useState } from 'react';
+import React, { Component, createRef } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ImageContainer from './ImageContainer';
 import Toolbar from './Toolbar';
-import DropZone from './DropZone';
 import DropOverlay from './DropOverlay';
+import { withStyles } from '@material-ui/styles';
 //<Dropzone
 
 //theme: Theme
-const useStyles = makeStyles((theme) =>
-  createStyles({
+const styles = theme => ({
     root: {
-      flexGrow: 1
+      flexGrow: 1,
       //borderStyle: 'solid',
       //borderWidth: '1px',
       //backgroundColor: 'rgba(0,0,0,.10)'
     },
+    content: {
+      padding: 10
+    },
     paper: {
-      padding: theme.spacing(2),
+      //padding: theme.spacing(2),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
+      //color: theme.palette.text.secondary,
     },
     imageContainer: {
+      minHeight: "300px",
       maxHeight: "500px",
       overflowY: "scroll"
     }
-  }),
-);
+});
 
-const DropWindow = ({show}) =>
-  <div style={{visibility: show? "visible" : "hidden", backgroundColor: "blue", position: "absolute", height: "200px", width: "300px", zIndex: 100}}>
-    {"UPLOAD FILE HERE"}
-  </div>
+class GridLayout extends Component {
+  resizeObserver = null;
+  resizeElement = createRef();
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      inDropZone: false,
+      overlayHeight: 0,
+      overlayWidth: 0,
+      files: []
+    }
+  }
 
-export default function GridLayout() {
-  var isDragging = false;
-  //how to check if files are present? Should we just check array list length?
+  componentDidMount() {
+    this.resizeObserver = new ResizeObserver((entries) => {
+      if (entries[0].contentRect) {
+        //console.log(entries[0].contentRect.width);
+        //width = entries[0].contentRect.width;
+        //height = entries[0].contentRect.height;
+        this.setState({
+          overlayWidth: entries[0].contentRect.width, 
+          overlayHeight: entries[0].contentRect.height
+        });
+      }
+     
+    });
+    this.resizeObserver.observe(this.resizeElement.current);
+  }
 
-  //use this to switch between grid and list layouts
-  //const [drag, setDrag] = useState(false);
-  const [layout, setLayout] = useState('');
+  componentWillUnmount() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
 
-  const handleDragOver = (e) => {
+  handleDragOver = (e) => {
     //console.log("dragOver");
   }
 
-  const handleDragExit = (e) => {
-    isDragging = false;
-    console.log("handleLeave");
+  handleDragExit = (e) => {
+    console.log("handleDragExit");
   }
 
-  const handleDragEnter = (e) => {
-    isDragging = true;
-    console.log("dragEnter", isDragging);
+  handleDragLeave = (e) => {
+    /*
+    console.log('handleDragLeave')
+    
+    if (this.state.inDropZone == true) {
+      this.setState({inDropZone: false});
+    }
+    */
   }
 
-  const handleDrop = (e) => {
-    //console.log("drop");
+  handleDragEnter = (e) => {
+    if (this.state.inDropZone == false) {
+      this.setState({inDropZone: true});
+    }
   }
 
+  handleDrop = (e) => {
+    console.log('handleDrop');
+    e.preventDefault();
+    e.stopPropagation();
 
-  const classes = useStyles();
-  const images = [
-    { title: 'something.docx', size: 100 },
-    { title: 'something1.xlsx', size: 100 },
-    { title: 'item232.text', size: 312 },
-    { title: 'something12323.docx', size: 301 },
-    { title: 'something.docx', size: 100 },
-    { title: 'something1.xlsx', size: 100 },
-    { title: 'item232.text', size: 312 },
-    { title: 'something12323.docx', size: 301 },
-    //{ title: 'something.docx', size: 100 },
-    //{ title: 'something1.xlsx', size: 100 },
-    //{ title: 'item232.text', size: 312 },
-    //{ title: 'something12323.docx', size: 301 },
-  ]
-  
- 
+    let transferedFiles = [...e.dataTransfer.files];
+    console.log('files', transferedFiles);
+    if (transferedFiles && transferedFiles.length > 0) {
+      let joinedFiles = this.state.files.concat(transferedFiles);
+      this.setState({files: joinedFiles});
+      e.dataTransfer.clearData();
+      this.setState({inDropZone: false});
+    }
+  }
 
+  handleDelete(id) {
+    console.log("handleDelete", id);
+    let notDeletedFiles = this.state.files.splice(id, 1);
+    this.setState({files: notDeletedFiles});
+  }
 
-  return (
-    <div className={classes.root}>
-      <Paper elevation={3} square 
-        onDragOver={e => handleDragOver(e)}
-        onDragEnter={e => handleDragEnter(e)}
-        onDragExit={e => handleDragExit(e)}
-        onDrop={e => handleDrop(e)}
-      >
-        <Toolbar/>
-        {isDragging &&
-          <DropOverlay/>
-        }
-        <Grid className={classes.imageContainer} container spacing={1}>
-          {images.map( image => (
-            <Grid item md={4} sm={4}>
-              <ImageContainer title={image.title} size={image.size}/>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
-    </div>
-  );
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.root}>
+        <Paper elevation={3} square 
+          onDragOver={e => e.preventDefault()}
+          onDragEnter={e => this.handleDragEnter(e)}
+          onDragExit={e => this.handleDragExit(e)}
+          onDragLeave={e => this.handleDragLeave(e)}
+          onDrop={e => this.handleDrop(e)}
+          ref={this.resizeElement}
+        >
+          <Toolbar/>
+
+          {this.state.inDropZone &&
+            <DropOverlay width={this.state.overlayWidth} height={this.state.overlayHeight}/>
+          }
+
+          <Grid className={classes.imageContainer} container spacing={1}>
+            {this.state.files.map( (file,index) => (
+              <Grid item md={4} sm={4} key={index}>
+                {/*  */}
+                <ImageContainer delete={this.handleDelete.bind(this)} title={file.name} size={file.size} id={index}/>
+              </Grid>
+            ))}
+          </Grid>
+
+        </Paper>
+      </div>
+    );
+  }
 }
+
+export default withStyles(styles)(GridLayout);

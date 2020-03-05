@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import Grid from '@material-ui/core/Grid';
-//import { connect } from 'react-redux';
 import Fab from '@material-ui/core/Fab';
 import {DeleteForever, CloudDownload } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
-
-
-interface IfcState {
-    size: number;
-    title: String;
-    image: string;
-    width: number;
-    hight: number;
-}
 
 const Hover = styled.div({
     opacity: 0,
@@ -41,7 +31,7 @@ const Background = styled.div({
     width: "300px",
     height: "200px",
     cursor: "pointer",
-    backgroundImage: "url(/bg.jpg)",
+    backgroundImage: "url(/generic_file.png)",
     [`:hover ${DisplayOver}`]: {
       backgroundColor: "rgba(0,0,0,.5)",
     },
@@ -51,10 +41,28 @@ const Background = styled.div({
 });
   
 function ImageContainer(props: any) {
+    
+    function formatBytes(bytes: number, decimals: number) {
+        if(bytes == 0) return '0 Bytes';
+        var k = 1024,
+            dm = decimals <= 0 ? 0 : decimals || 2,
+            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
 
-    const [size, setSize] = useState(props.size);
-    const [title, setTitle] = useState(props.title);
-    const [image, setImage] = useState(0);
+    const onClickDelete = (e: any) => {
+        console.log("onClickDelete");
+        props.delete();
+    }
+
+    let size = formatBytes(props.size, 2);
+    let title = props.title;
+    let id = props.id;
+
+    //const [size, setSize] = useState(props.size);
+    //const [title, setTitle] = useState(props.title);
+    //const [image, setImage] = useState(0);
 
     return(
         <Grid container spacing={1}>
@@ -70,11 +78,12 @@ function ImageContainer(props: any) {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Fab size="small" color="primary" aria-label="edit">
-                                        <DeleteForever />
+                                        {/*onClick={e => onClickDelete(e)}*/}
+                                        <DeleteForever onClick={() => {props.delete(id)}}/>
                                     </Fab>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6">{size} KB</Typography>
+                                    <Typography variant="h6">{size}</Typography>
                                 </Grid>
                             </Grid>
                         </Hover>

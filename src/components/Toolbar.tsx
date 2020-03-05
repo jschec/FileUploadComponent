@@ -5,6 +5,8 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Divider from '@material-ui/core/Divider';
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     margin: {
         margin: theme.spacing(1),
+    },
+    inputFileUpload: {
+      display: 'none'
     }
   }),
 );
@@ -34,12 +39,16 @@ export default function Toolbar() {
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container spacing={1}>
-        <IconButton aria-label="delete" className={classes.margin}>
-          <AddIcon /> {/*fontSize="small"*/}
-        </IconButton>
-        <IconButton aria-label="delete" className={classes.margin}>
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip title="Upload Placeholder" aria-label="upload">
+          <IconButton aria-label="uploadIconButton" className={classes.margin}>
+            <AddIcon /> {/*fontSize="small"*/}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete All Placeholder" aria-label="delete">
+          <IconButton aria-label="deleteIconButton" className={classes.margin}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       </Grid>
       <Divider/>
     </div>
