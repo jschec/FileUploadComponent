@@ -28,7 +28,7 @@ const Background = styled.div({
     backgroundRepeat: "no-repeat",
     color: "#FFF",
     position: "relative",
-    width: "300px",
+    width: "200px",
     height: "200px",
     cursor: "pointer",
     backgroundImage: "url(/generic_file.png)",
@@ -51,19 +51,9 @@ function ImageContainer(props: any) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
-    const onClickDelete = (e: any) => {
-        console.log("onClickDelete");
-        props.delete();
-    }
-
     let size = formatBytes(props.size, 2);
-    let title = props.title;
-    let id = props.id;
-
-    //const [size, setSize] = useState(props.size);
-    //const [title, setTitle] = useState(props.title);
-    //const [image, setImage] = useState(0);
-
+    let name = props.title;
+    
     return(
         <Grid container spacing={1}>
             <Grid container direction="row" justify="center" alignItems="center">
@@ -79,7 +69,7 @@ function ImageContainer(props: any) {
                                 <Grid item xs={6}>
                                     <Fab size="small" color="primary" aria-label="edit">
                                         {/*onClick={e => onClickDelete(e)}*/}
-                                        <DeleteForever onClick={() => {props.delete(id)}}/>
+                                        <DeleteForever onClick={() => {props.delete(name)}}/>
                                     </Fab>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -91,7 +81,7 @@ function ImageContainer(props: any) {
                 </Background>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1" gutterBottom>{title}</Typography>
+                <Typography variant="subtitle1" gutterBottom>{name}</Typography>
             </Grid>
         </Grid>
     )

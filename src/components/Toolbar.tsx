@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
         padding: 5,
         paddingBottom: 20
     },
+    input: {
+      display: 'none',
+    },
     grid: {
         //backgroundColor: 'rgba(0,0,0,.10)',
         //borderBottomStyle: 'solid',
@@ -39,10 +42,14 @@ export default function Toolbar() {
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container spacing={1}>
+        {/* Button click in specific opens file dialog but other clicks do not */}
+        <input accept="image/*" className={classes.input} id="icon-button-file" type="file" />
         <Tooltip title="Upload Placeholder" aria-label="upload">
-          <IconButton aria-label="uploadIconButton" className={classes.margin}>
-            <AddIcon /> {/*fontSize="small"*/}
-          </IconButton>
+          <label htmlFor="icon-button-file">
+            <IconButton aria-label="uploadIconButton" className={classes.margin}>
+              <AddIcon />
+            </IconButton>
+          </label>
         </Tooltip>
         <Tooltip title="Delete All Placeholder" aria-label="delete">
           <IconButton aria-label="deleteIconButton" className={classes.margin}>

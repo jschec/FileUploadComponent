@@ -6,7 +6,6 @@ import ImageContainer from './ImageContainer';
 import Toolbar from './Toolbar';
 import DropOverlay from './DropOverlay';
 import { withStyles } from '@material-ui/styles';
-//<Dropzone
 
 //theme: Theme
 const styles = theme => ({
@@ -48,9 +47,6 @@ class GridLayout extends Component {
   componentDidMount() {
     this.resizeObserver = new ResizeObserver((entries) => {
       if (entries[0].contentRect) {
-        //console.log(entries[0].contentRect.width);
-        //width = entries[0].contentRect.width;
-        //height = entries[0].contentRect.height;
         this.setState({
           overlayWidth: entries[0].contentRect.width, 
           overlayHeight: entries[0].contentRect.height
@@ -99,6 +95,9 @@ class GridLayout extends Component {
     let transferedFiles = [...e.dataTransfer.files];
     console.log('files', transferedFiles);
     if (transferedFiles && transferedFiles.length > 0) {
+      const existingFiles = this.state.files.map(f => f.name)
+      //should output existing files to snackbar
+      transferedFiles = transferedFiles.filter(f => !existingFiles.includes(f.name));
       let joinedFiles = this.state.files.concat(transferedFiles);
       this.setState({files: joinedFiles});
       e.dataTransfer.clearData();
@@ -106,9 +105,9 @@ class GridLayout extends Component {
     }
   }
 
-  handleDelete(id) {
-    console.log("handleDelete", id);
-    let notDeletedFiles = this.state.files.splice(id, 1);
+  handleDelete(nameToDelete) {
+    console.log("handleDelete", nameToDelete);
+    let notDeletedFiles = this.state.files.filter(f => nameToDelete !== f.name);
     this.setState({files: notDeletedFiles});
   }
 
@@ -133,8 +132,7 @@ class GridLayout extends Component {
 
           <Grid className={classes.imageContainer} container spacing={1}>
             {this.state.files.map( (file,index) => (
-              <Grid item md={4} sm={4} key={index}>
-                {/*  */}
+              <Grid item md={2} sm={2} key={file.name}>
                 <ImageContainer delete={this.handleDelete.bind(this)} title={file.name} size={file.size} id={index}/>
               </Grid>
             ))}
