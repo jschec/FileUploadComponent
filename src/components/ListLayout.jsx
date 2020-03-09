@@ -1,36 +1,32 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import GridItem from './GridFileItem';
+import List from '@material-ui/core/List';
+import ListFileItem from './ListFileItem';
 import PropTypes from 'prop-types';
-
-
 //import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 /*
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    gridLayout: {
+    fileLayout: {
         overflowY: "scroll",
         maxHeight: "300px",
     }
   })
 );
-
-const classes = useStyles();
 */
-const GridLayoutNew = ({ files, deleteFile }) => (
-    //className={classes.gridLayout} 
-    <Grid container spacing={1}>
+
+const ListLayout = ({ files, deleteFile }) => (
+    <List dense={true}>
         {files.map( (file) =>
-            <GridItem
+            <ListFileItem
                 key={file.id}
                 {...file} 
                 onClick={() => deleteFile(file.id)}
             />
         )}
-    </Grid>
+    </List>
 )
 
-GridLayoutNew.propTypes = {
+ListLayout.propTypes = {
   files: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -49,4 +45,4 @@ GridLayoutNew.propTypes = {
   deleteFile: PropTypes.func.isRequired
 }
 
-export default GridLayoutNew;
+export default ListLayout;
