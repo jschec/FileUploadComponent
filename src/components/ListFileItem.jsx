@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Divider from '@material-ui/core/Divider';
+import PropTypes from 'prop-types';
 
 function ListFileItem(props) {
     const [renderDelay, setRenderDelay] = useState(true);
@@ -31,9 +32,9 @@ function ListFileItem(props) {
     if (renderDelay) {
         fileContainer =
         <Grid container direction="column">
-            <ListItem button>
+            <ListItem>
                 <ListItemAvatar>
-                    <Skeleton variant="square" width={50} height={50} />
+                    <Skeleton variant="rect" width={50} height={50} />
                 </ListItemAvatar>
                 <Grid container direction="column">
                     <Grid item xs={12}>
@@ -78,8 +79,8 @@ function ListFileItem(props) {
                     <IconButton edge="end" aria-label="delete">
                         <CloudDownloadIcon />
                     </IconButton>
-                    <IconButton edge="end" aria-label="delete">
-                        <DeleteIcon onClick={() => props.onClick()}/>
+                    <IconButton edge="end" aria-label="delete" onClick={() => props.onClick()} >
+                        <DeleteIcon/>
                     </IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
@@ -96,30 +97,20 @@ function ListFileItem(props) {
         </div>
     )
 }
-
-export default ListFileItem;
-
-/*
-const ListFileItem = ({ onClick, id, file, uploaded }) => (
-    <ListGhost file={file} uploaded={uploaded} delete={onClick.bind(this)}/>
-    
-)
-
 ListFileItem.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  id: PropTypes.number.isRequired,
-  file: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    lastModified: PropTypes.number.isRequired,
-    //what is appropriate type for date?
-    lastModifiedDate: PropTypes.instanceOf(Date).isRequired,
-    webkitRelativePath: PropTypes.string.isRequired,
-    size: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired
-  }).isRequired,
-  uploaded: PropTypes.bool.isRequired,
-  uploadPercentage: PropTypes.number.isRequired
+    onClick: PropTypes.func.isRequired,
+    id: PropTypes.number.isRequired,
+    file: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        lastModified: PropTypes.number.isRequired,
+        lastModifiedDate: PropTypes.instanceOf(Date).isRequired,
+        webkitRelativePath: PropTypes.string.isRequired,
+        size: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired
+    }).isRequired,
+    uploaded: PropTypes.bool.isRequired,
+    uploading: PropTypes.bool.isRequired,
+    uploadPercentage: PropTypes.number.isRequired
 }
 
 export default ListFileItem;
-*/

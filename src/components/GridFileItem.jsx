@@ -82,9 +82,9 @@ function GridFileItem(props) {
                                     </IconButton >
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <IconButton  size="small" color="primary" aria-label="edit">
+                                    <IconButton  size="small" color="primary" aria-label="edit" onClick={() => props.onClick()}>
                                         {/*onClick={e => onClickDelete(e)}*/}
-                                        <DeleteForever fontSize={'small'} onClick={() => props.onClick()}/>
+                                        <DeleteForever fontSize={'small'}/>
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -110,32 +110,20 @@ function GridFileItem(props) {
     )
 }
 
-export default GridFileItem;
-
-/*
-const GridItem = ({ onClick, id, file, uploaded }) => (
-    <Grid item container lg={2} md={2} sm={6} spacing={1}>
-        <Grid container direction="row" justify="center" alignItems="center">
-            <GridItemItem file={file} delete={onClick.bind(this)}></GridItemItem>
-        </Grid>
-    </Grid>
-)
-
-GridItem.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  id: PropTypes.number.isRequired,
-  file: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    lastModified: PropTypes.number.isRequired,
-    //what is appropriate type for date?
-    lastModifiedDate: PropTypes.instanceOf(Date).isRequired,
-    webkitRelativePath: PropTypes.string.isRequired,
-    size: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired
-  }).isRequired,
-  uploaded: PropTypes.bool.isRequired,
-  uploadPercentage: PropTypes.number.isRequired
+GridFileItem.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    id: PropTypes.number.isRequired,
+    file: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        lastModified: PropTypes.number.isRequired,
+        lastModifiedDate: PropTypes.instanceOf(Date).isRequired,
+        webkitRelativePath: PropTypes.string.isRequired,
+        size: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired
+    }).isRequired,
+    uploaded: PropTypes.bool.isRequired,
+    uploading: PropTypes.bool.isRequired,
+    uploadPercentage: PropTypes.number.isRequired
 }
 
-export default GridItem;
-*/
+export default GridFileItem;

@@ -37,7 +37,6 @@ GridLayoutNew.propTypes = {
       file: PropTypes.shape({
         name: PropTypes.string.isRequired,
         lastModified: PropTypes.number.isRequired,
-        //what is appropriate type for date?
         lastModifiedDate: PropTypes.instanceOf(Date).isRequired,
         webkitRelativePath: PropTypes.string.isRequired,
         size: PropTypes.number.isRequired,
