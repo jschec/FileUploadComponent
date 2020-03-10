@@ -1,6 +1,6 @@
 import { Layouts } from '../actions'
 
-const layout = (state = Layouts.GRID, action) => {
+const layout = (state = Layouts.LIST, action) => {
   switch (action.type) {
     case 'SET_LAYOUT':
       if (action.layout) {

@@ -1,21 +1,22 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
+//import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+//import AddIcon from '@material-ui/icons/Add';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
-import DeleteIcon from '@material-ui/icons/Delete';
+//import DeleteIcon from '@material-ui/icons/Delete';
 import Divider from '@material-ui/core/Divider';
-import Tooltip from '@material-ui/core/Tooltip';
+//import Tooltip from '@material-ui/core/Tooltip';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import axios from "axios";
+//import {uploadFiles } from '../utilities/UploadFile';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -51,9 +52,10 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-const Toolbar = ({ showSnackbar, files, addFile, deleteFiles, 
-  visibilityFilter, 
-  setVisibilityFilter, layout, setLayout }) => {
+const Toolbar = ({ showSnackbar, files, addFile, uploadingFile, 
+  uploadedFile, updateFileUploadProgress, deleteFiles, visibilityFilter, 
+  setVisibilityFilter, layout, 
+  setLayout }) => {
   const classes = useStyles();
   let selectedFiles = [];
 
@@ -74,6 +76,37 @@ const Toolbar = ({ showSnackbar, files, addFile, deleteFiles,
     }
   }
 
+  const uploadFile = fileToUpload => {
+    uploadingFile(fileToUpload.id);
+
+    const config = {
+      headers: {'content-type': 'multipart/form-data'},
+      onUploadProgress: function(progressEvent) {
+        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        updateFileUploadProgress(fileToUpload.id, percentCompleted);
+        console.log("progess:", percentCompleted)
+      }
+    }
+    var data = new FormData();
+    console.log('fileToUpload', fileToUpload);
+    data.append('file', fileToUpload.file);
+              
+    axios.post('/AppFile', data, config)
+      .then(res => {
+        uploadingFile(fileToUpload.id);
+        uploadedFile(fileToUpload.id);
+        console.log('uploaded file', fileToUpload.name);
+        console.log(res);
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleUpload = (e) => {
+    for (let file of files) {
+      uploadFile(file);
+    }
+  }
+
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container spacing={1}>
@@ -90,7 +123,7 @@ const Toolbar = ({ showSnackbar, files, addFile, deleteFiles,
             }}/>
           <label htmlFor="icon-button-file">
             <Button variant="contained" color="primary" component="span">
-              Upload
+              ADD
             </Button>
           </label>
           <Button 
@@ -99,6 +132,13 @@ const Toolbar = ({ showSnackbar, files, addFile, deleteFiles,
             component="span" 
             onClick={(e)=> deleteFiles()}>
               Clear
+          </Button>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            component="span" 
+            onClick={(e)=> handleUpload()}>
+              Upload
           </Button>
           <FormControl className={classes.formControl}>
             <InputLabel id="demo-simple-select-label">Show</InputLabel>

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
-import ToolbarContainer from '../containers/ToolbarContainer';
+import ToolbarWrapped from '../containers/ToolbarWrapped';
 import { withStyles } from '@material-ui/styles';
 import VisibleListItems from '../containers/VisibleListItems';
 import VisibleGridItems from '../containers/VisibleGridItems';
 import SnackbarAppAlert from '../containers/SnackbarAppAlert';
 import { addFile, showSnackbar } from '../actions';
 import PropTypes from 'prop-types';
-
+import { uploadFiles } from '../utilities/UploadFile';
 //theme: Theme
 const styles = ({
     root: {
@@ -79,9 +79,7 @@ class Main extends Component {
         console.log('snackbar dispatch');
         this.props.dispatch(showSnackbar("warning", "Already transfered"));
       };
-      for (let newFile of newFiles) {
-        console.log('newFile', newFile);
-        
+      for (let newFile of newFiles) {        
         this.props.dispatch(addFile(newFile));
       }
       e.dataTransfer.clearData();
@@ -143,7 +141,7 @@ class Main extends Component {
         onDrop={e => this.handleDrop(e, files)}
       >
         <Paper className={classes.paperContent} elevation={3} square>
-          <ToolbarContainer/>
+          <ToolbarWrapped/>
           <div className={classes.contentContainer}>
             <div style={inputStyle}>
               Upload files here
@@ -151,7 +149,6 @@ class Main extends Component {
             {view}
           </div>
         </Paper>
-        <SnackbarAppAlert/>
       </div>
     );
   }

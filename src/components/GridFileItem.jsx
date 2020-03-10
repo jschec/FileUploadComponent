@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled/macro';
 import Grid from '@material-ui/core/Grid';
+//import LinearProgress from '@material-ui/core/LinearProgress';
+import { formatBytes } from '../utilities/formatBytes';
+import PropTypes from 'prop-types';
+//import GridItemItem from './GridItemItem';
 import IconButton  from '@material-ui/core/IconButton';
 import {DeleteForever, CloudDownload } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
-//import Skeleton from '@material-ui/lab/Skeleton';
-import { formatBytes } from '../utilities/formatBytes';
-import PropTypes from 'prop-types';
-import GridItemItem from './GridItemItem';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const Hover = styled.div({
     opacity: 0,
@@ -44,35 +45,78 @@ const Background = styled.div({
     },
 });
 
+function GridFileItem(props) {
+    const [renderDelay, setRenderDelay] = useState(true);
 
+    useEffect(() => {
+        const delay = setTimeout(() => setRenderDelay(false), 2000);
+        return () => clearTimeout(delay);
+    }, []);
+    
 
+    let fileSize = formatBytes(props.file.size, 2);
+    let fileName = props.file.name;
+    let fileContainer;
+
+    if (renderDelay) {
+        fileContainer = 
+        <Grid container direction="column">
+            <Grid item xs={12}>
+                <Skeleton variant="rect" width={100} height={100} />
+            </Grid>
+            <Grid item xs={12}>
+                <Skeleton variant="text"/>
+            </Grid>
+        </Grid>
+    } else {
+        fileContainer = 
+        <Grid container direction="column">
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Background>
+                    <DisplayOver>
+                        <Hover>
+                            <Grid container spacing={3}>
+                                <Grid item xs={6}>
+                                    <IconButton  size="small" color="primary" aria-label="add">
+                                        <CloudDownload fontSize={'small'}/>
+                                    </IconButton >
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <IconButton  size="small" color="primary" aria-label="edit">
+                                        {/*onClick={e => onClickDelete(e)}*/}
+                                        <DeleteForever fontSize={'small'} onClick={() => props.onClick()}/>
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="caption">{fileSize}</Typography>
+                                </Grid>
+                            </Grid>
+                        </Hover>
+                    </DisplayOver>
+                </Background>
+            </Grid>
+            <Grid item xs={12} style={{overflow: "hidden", textOverflow: "ellipsis", width: '10rem'}}>
+                <Typography noWrap variant="caption" gutterBottom>{fileName}</Typography>
+            </Grid>
+        </Grid>
+    }
+    
+    return(
+        <Grid item container lg={2} md={2} sm={6} spacing={1}>
+            <Grid container direction="row" justify="center" alignItems="center">
+            {fileContainer}
+            </Grid>
+        </Grid>
+    )
+}
+
+export default GridFileItem;
+
+/*
 const GridItem = ({ onClick, id, file, uploaded }) => (
     <Grid item container lg={2} md={2} sm={6} spacing={1}>
         <Grid container direction="row" justify="center" alignItems="center">
             <GridItemItem file={file} delete={onClick.bind(this)}></GridItemItem>
-            {/**
-            <Background>
-                <DisplayOver>
-                    <Hover>
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                <IconButton  size="small" color="primary" aria-label="add">
-                                    <CloudDownload fontSize={'small'}/>
-                                </IconButton >
-                            </Grid>
-                            <Grid item xs={6}>
-                                <IconButton  size="small" color="primary" aria-label="edit">
-                                    <DeleteForever fontSize={'small'} onClick={onClick}/>
-                                </IconButton >
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant="caption">{formatBytes(file.size)}</Typography>
-                            </Grid>
-                        </Grid>
-                    </Hover>
-                </DisplayOver>
-            </Background>
-            */}
         </Grid>
     </Grid>
 )
@@ -89,7 +133,9 @@ GridItem.propTypes = {
     size: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired
   }).isRequired,
-  uploaded: PropTypes.bool.isRequired
+  uploaded: PropTypes.bool.isRequired,
+  uploadPercentage: PropTypes.number.isRequired
 }
 
 export default GridItem;
+*/

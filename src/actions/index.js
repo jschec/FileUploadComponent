@@ -25,9 +25,20 @@ export const setLayout = layout => ({
   layout
 })
 
-export const toggleFile = id => ({
-  type: 'TOGGLE_FILE',
+export const uploadingFile = id => ({
+  type: 'UPLOADING_FILE',
   id
+})
+
+export const uploadedFile = id => ({
+  type: 'UPLOADED_FILE',
+  id
+})
+
+export const updateFileUploadProgress = (id, progress) => ({
+  type: 'UPDATE_FILE_UPLOAD_PROGRESS',
+  id,
+  progress
 })
 
 export const VisibilityFilters = {

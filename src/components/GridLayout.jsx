@@ -44,6 +44,8 @@ GridLayoutNew.propTypes = {
         type: PropTypes.string.isRequired
       }).isRequired,
       uploaded: PropTypes.bool.isRequired,
+      uploading: PropTypes.bool.isRequired,
+      uploadPercentage: PropTypes.number.isRequired
     }).isRequired
   ).isRequired,
   deleteFile: PropTypes.func.isRequired

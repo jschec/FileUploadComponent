@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -7,41 +7,102 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import Badge from '@material-ui/core/Badge';
-import PropTypes from 'prop-types';
 import { formatBytes } from "../utilities/formatBytes";
-import ListGhost from './ListGhost';
+import Grid from '@material-ui/core/Grid';
+import Skeleton from '@material-ui/lab/Skeleton';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Divider from '@material-ui/core/Divider';
 
+function ListFileItem(props) {
+    const [renderDelay, setRenderDelay] = useState(true);
+
+    useEffect(() => {
+        const delay = setTimeout(() => setRenderDelay(false), 2000);
+        return () => clearTimeout(delay);
+    }, []);
+    
+    let fileUploaded = props.uploaded;
+    let fileUploading = props.uploading;
+    let uploadPercentage = props.uploadPercentage
+    let fileSize = formatBytes(props.file.size, 2);
+    let fileName = props.file.name;
+    let fileContainer;
+
+    if (renderDelay) {
+        fileContainer =
+        <Grid container direction="column">
+            <ListItem button>
+                <ListItemAvatar>
+                    <Skeleton variant="square" width={50} height={50} />
+                </ListItemAvatar>
+                <Grid container direction="column">
+                    <Grid item xs={12}>
+                        <Skeleton variant="text" width={200} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Skeleton variant="text" width={100} />
+                    </Grid>
+                </Grid>
+                <ListItemSecondaryAction>
+                    {/* spacing={#} does not work here */}
+                    <Grid container direction="row">
+                        <Skeleton variant="circle" width={25} height={25} />
+                        <Skeleton variant="circle" width={25} height={25} />
+                    </Grid>
+                </ListItemSecondaryAction>
+            </ListItem>
+            <Divider />
+        </Grid>
+    } else {
+        fileContainer = 
+        <Grid container direction="column">
+            <ListItem button>
+                <ListItemAvatar>
+                {fileUploaded ?
+                    (
+                        <Badge color="secondary" badgeContent=" " overlap="rectangle">
+                            <img src="/generic_file.png" style={{height: 50, width: 50}}/>
+                        </Badge>
+                    )
+                    :
+                    (
+                        <img src="/generic_file.png" style={{height: 50, width: 50}}/>
+                    )
+                }
+                </ListItemAvatar>
+                <ListItemText
+                    primary={fileName}
+                    secondary={fileUploading ? uploadPercentage + "%" : fileSize}
+                />
+                <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="delete">
+                        <CloudDownloadIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete">
+                        <DeleteIcon onClick={() => props.onClick()}/>
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
+            {fileUploading && (
+                <LinearProgress variant="determinate" value={uploadPercentage}/>
+            )}
+            <Divider />
+        </Grid>
+    }
+    
+    return(
+        <div>
+            {fileContainer}
+        </div>
+    )
+}
+
+export default ListFileItem;
+
+/*
 const ListFileItem = ({ onClick, id, file, uploaded }) => (
     <ListGhost file={file} uploaded={uploaded} delete={onClick.bind(this)}/>
-    /*
-    <ListItem button>
-        <ListItemAvatar>
-        {uploaded ?
-            (
-                <Badge color="secondary" badgeContent=" " overlap="rectangle">
-                    <img src="/generic_file.png" style={{height: 50, width: 50}}/>
-                </Badge>
-            )
-            :
-            (
-                <img src="/generic_file.png" style={{height: 50, width: 50}}/>
-            )
-        }
-        </ListItemAvatar>
-        <ListItemText
-            primary={file.name}
-            secondary={formatBytes(file.size)}
-        />
-        <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="delete">
-                <CloudDownloadIcon />
-            </IconButton>
-            <IconButton edge="end" aria-label="delete">
-                <DeleteIcon onClick={onClick}/>
-            </IconButton>
-        </ListItemSecondaryAction>
-    </ListItem>
-    */
+    
 )
 
 ListFileItem.propTypes = {
@@ -56,7 +117,9 @@ ListFileItem.propTypes = {
     size: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired
   }).isRequired,
-  uploaded: PropTypes.bool.isRequired
+  uploaded: PropTypes.bool.isRequired,
+  uploadPercentage: PropTypes.number.isRequired
 }
 
 export default ListFileItem;
+*/
