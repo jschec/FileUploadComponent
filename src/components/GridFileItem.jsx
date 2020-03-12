@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled/macro';
 import Grid from '@material-ui/core/Grid';
-//import LinearProgress from '@material-ui/core/LinearProgress';
 import { formatBytes } from '../utilities/formatBytes';
 import PropTypes from 'prop-types';
-//import GridItemItem from './GridItemItem';
 import IconButton  from '@material-ui/core/IconButton';
-import {DeleteForever, CloudDownload } from '@material-ui/icons';
+import {DeleteForever, CloudDownload, CheckCircle } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import Skeleton from '@material-ui/lab/Skeleton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Hover = styled.div({
     opacity: 0,
@@ -53,7 +52,9 @@ function GridFileItem(props) {
         return () => clearTimeout(delay);
     }, []);
     
-
+    let fileUploaded = props.uploaded;
+    let fileUploading = props.uploading;
+    let uploadPercentage = props.uploadPercentage
     let fileSize = formatBytes(props.file.size, 2);
     let fileName = props.file.name;
     let fileContainer;
@@ -61,42 +62,67 @@ function GridFileItem(props) {
     if (renderDelay) {
         fileContainer = 
         <Grid container direction="column">
-            <Grid item xs={12}>
-                <Skeleton variant="rect" width={100} height={100} />
+            <Grid container item xs={12} direction="row" justify="center" alignItems="center">
+                <Skeleton variant="rect" width={90} height={90} />
             </Grid>
-            <Grid item xs={12}>
-                <Skeleton variant="text"/>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={10} style={{overflow: "hidden"}}>
+                    <Skeleton variant="text"/>
+                </Grid>
             </Grid>
         </Grid>
     } else {
         fileContainer = 
         <Grid container direction="column">
             <Grid container direction="row" justify="center" alignItems="center">
-                <Background>
-                    <DisplayOver>
-                        <Hover>
-                            <Grid container spacing={3}>
-                                <Grid item xs={6}>
-                                    <IconButton  size="small" color="primary" aria-label="add">
-                                        <CloudDownload fontSize={'small'}/>
-                                    </IconButton >
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <IconButton  size="small" color="primary" aria-label="edit" onClick={() => props.onClick()}>
-                                        {/*onClick={e => onClickDelete(e)}*/}
-                                        <DeleteForever fontSize={'small'}/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant="caption">{fileSize}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Hover>
-                    </DisplayOver>
-                </Background>
+                {fileUploading ?
+                (
+                    <Grid container spacing={1} style={{display: 'inline-block', position: 'relative'}}>
+                        <Grid container style={{ top: 5, left: 20, width: 100, height: 100, position: 'absolute'}} direction="column" justify="center" alignItems="center">
+                            <CircularProgress variant="static" value={uploadPercentage}/>
+                            <Typography variant="caption" gutterBottom>{uploadPercentage + "%"}</Typography>
+                        </Grid>
+                        <img style={{top: 0, width: 100, height: 100}} src="/generic_file.png"/>
+                    </Grid>
+                ) :
+                (
+                    <Grid xs={12} container direction="column" justify="center" alignItems="center">
+                        <Background>
+                            <DisplayOver>
+                                <Hover>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <IconButton size="small" color="primary" aria-label="add">
+                                                <CloudDownload fontSize={'small'}/>
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <IconButton  size="small" color="primary" aria-label="edit" onClick={() => props.onClick()}>
+                                                <DeleteForever fontSize={'small'}/>
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography variant="caption">{fileSize}</Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Hover>
+                            </DisplayOver>
+                        </Background>
+                        {/*
+                         Does not align properly
+                         
+                        {!fileUploaded &&
+                            <CheckCircle fontSize="small" style={{color: 'green', top: 0, position: 'absolute'}}/>
+                        }
+                        */}
+                    </Grid>               
+                )}
+                
             </Grid>
-            <Grid item xs={12} style={{overflow: "hidden", textOverflow: "ellipsis", width: '10rem'}}>
-                <Typography noWrap variant="caption" gutterBottom>{fileName}</Typography>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={10} style={{overflow: "hidden", textOverflow: "ellipsis"}}>
+                    <Typography noWrap variant="caption" gutterBottom>{fileName}</Typography>
+                </Grid>
             </Grid>
         </Grid>
     }

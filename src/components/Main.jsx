@@ -7,24 +7,19 @@ import VisibleGridItems from '../containers/VisibleGridItems';
 import SnackbarAppAlert from '../containers/SnackbarAppAlert';
 import { addFile, showSnackbar } from '../actions';
 import PropTypes from 'prop-types';
-import { uploadFiles } from '../utilities/UploadFile';
-//theme: Theme
+
 const styles = ({
     root: {
       flexGrow: 1,
     },
     paper: {
-      //padding: theme.spacing(2),
       textAlign: 'center',
-      //color: theme.palette.text.secondary,
-    },
-    paperContent: {
-      //maxHeight: "500px"
     },
     contentContainer: {
       position: 'relative',
       minHeight: "300px",
-      //maxHeight: "500px",
+      overflowY: "scroll",
+      maxHeight: "400px",
       padding: "5px"
     }
 });
@@ -36,13 +31,8 @@ class Main extends Component {
     super(props);
     this.handleDrop = this.handleDrop.bind(this);
     this.state = {
-      snackbarOpen: false,
       inDropZone: false,
     }
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props
   }
 
   handleDragOver = (e) => {
@@ -88,23 +78,10 @@ class Main extends Component {
     this.dragCounter = 0;
   }
 
-  // delete this function and try to implement click
-  // away functionality
-  handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.setState({snackbarOpen: false});
-  };
-
-  handleSnackbarOpen = () => {
-    this.setState({snackbarOpen: true});
-  };
-
   render() {
     const { classes } = this.props;
     const inDropZone = this.state.inDropZone;
-    const { files, layout, snackbar } = this.props;
+    const { files, layout } = this.props;
     let view;
 
     let inputStyle = {
@@ -149,6 +126,7 @@ class Main extends Component {
             {view}
           </div>
         </Paper>
+        <SnackbarAppAlert/>
       </div>
     );
   }
@@ -157,9 +135,6 @@ class Main extends Component {
 Main.propTypes = {
   files: PropTypes.array.isRequired,
   layout: PropTypes.string.isRequired,
-  snackbar: PropTypes.object.isRequired,
-  //isFetching: PropTypes.bool.isRequired,
-  //lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 }
 

@@ -1,14 +1,10 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-//import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-//import AddIcon from '@material-ui/icons/Add';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
-//import DeleteIcon from '@material-ui/icons/Delete';
 import Divider from '@material-ui/core/Divider';
-//import Tooltip from '@material-ui/core/Tooltip';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import FormControl from '@material-ui/core/FormControl';
@@ -16,7 +12,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import axios from "axios";
-//import {uploadFiles } from '../utilities/UploadFile';
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -110,7 +106,7 @@ const Toolbar = ({ showSnackbar, files, addFile, uploadingFile,
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container spacing={1}>
-        <Grid item container xs={6} direction="row" justify="flex-start" alignItems="center">
+        <Grid item container xs={6} direction="row" justify="space-evenly" alignItems="center">
           <input 
             multiple 
             className={classes.input} 

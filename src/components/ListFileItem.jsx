@@ -6,7 +6,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import Badge from '@material-ui/core/Badge';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { formatBytes } from "../utilities/formatBytes";
 import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -61,9 +61,10 @@ function ListFileItem(props) {
                 <ListItemAvatar>
                 {fileUploaded ?
                     (
-                        <Badge color="secondary" badgeContent=" " overlap="rectangle">
+                        <div>
                             <img src="/generic_file.png" style={{height: 50, width: 50}}/>
-                        </Badge>
+                            <CheckCircleIcon fontSize="small" style={{color: 'green', top: 0, left: 55, position: 'absolute'}}/>
+                        </div>
                     )
                     :
                     (

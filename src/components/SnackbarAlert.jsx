@@ -12,7 +12,7 @@ const SnackbarAlert = ({ snackbar, handleClose }) => (
 )
 
 SnackbarAlert.propTypes = {
-    snackbar: PropTypes.objectOf({
+    snackbar: PropTypes.shape({
         open: PropTypes.bool.isRequired,
         hideTimer: PropTypes.number.isRequired,
         alertType: PropTypes.string.isRequired,

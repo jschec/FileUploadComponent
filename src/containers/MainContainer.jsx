@@ -5,7 +5,7 @@ import { getVisibleTodos } from '../actions'
 const mapStateToProps = state => ({
   files: getVisibleTodos(state.files, state.visibilityFilter),
   layout: state.layout,
-  snackbar: state.snackbar
+  //snackbar: state.snackbar
 })
 
 export default connect(mapStateToProps)(Main);

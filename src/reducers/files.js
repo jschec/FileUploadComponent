@@ -1,5 +1,3 @@
-import { uploadFiles } from '../utilities/UploadFile';
-
 const files = (state = [], action) => {
     switch (action.type) {
       case 'ADD_FILE':
